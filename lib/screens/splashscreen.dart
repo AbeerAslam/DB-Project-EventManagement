@@ -14,23 +14,30 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Options()),
       );
     });
   }
+
   @override
   Widget build(context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-    Image.asset(
-    'assets/images/CBS_LOGO.jpg',
-      width: 200,
-    ),
-    const SizedBox(height: 20)]
-  );
+    return Center(
+      child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+             Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+              'assets/images/LOGO.png',
+              width: 200,
+            )
+            )
+      ],
+      ),
+    );
+  }
 }
-}
+
