@@ -1,6 +1,11 @@
+import 'package:event_management/userPages/Admin/admin_main.dart';
 import 'package:flutter/material.dart';
 import 'package:event_management/screens/splashscreen.dart';
 import 'package:event_management/screens/options.dart';
+import 'package:event_management/models/navigation_bar.dart';
+import '../test.dart';
+import '../userPages/Admin/admin_emp.dart';
+import '../userPages/Admin/admin_log.dart';
 
 
 
@@ -11,7 +16,7 @@ void main() {
       theme: ThemeData(scaffoldBackgroundColor:  const Color.fromARGB(
           255, 19, 17, 17)),
       home: const Scaffold(
-        body: Center(child: Options() ),
+        body: Center(child: SplashScreen() ),
       ),
     ),
   );

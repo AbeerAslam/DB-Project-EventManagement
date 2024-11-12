@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:event_management/screens/event_category.dart';
 import 'package:event_management/models/input_password_dialog.dart';
 
+import '../models/app_bar.dart';
+
 class Options extends StatefulWidget {
   const Options({super.key});
 
@@ -18,24 +20,7 @@ class _Options extends State<Options> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 33, 9, 78),
-          automaticallyImplyLeading: false,
-          title: const Align(
-            alignment: AlignmentDirectional(0, 0),
-            child: Text(
-              'Welcome',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                color: Colors.white,
-                fontSize: 35,
-                letterSpacing: 0.0,
-              ),
-            ),
-          ),
-          elevation: 2,
-        ),
+        appBar: CustomAppBar(titleText:'Logs',false,true).buildAppBar(),
         body: SafeArea(
           top: true,
           child: Stack(
@@ -49,6 +34,7 @@ class _Options extends State<Options> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => PasswordDialog(
+                          user: 'admin',
                           email: 'admin@gmail.com',
                           onSubmit: (String email,String password) {
                             // Handle password submission
@@ -143,6 +129,7 @@ Widget build(BuildContext context) {
                     context,
                     MaterialPageRoute(
                       builder: (context) => PasswordDialog(
+                        user:'organizer',
                         email: 'organizer?@gmail.com',
                         onSubmit: (String email,String password) {
                           // Handle password submission
@@ -162,6 +149,7 @@ Widget build(BuildContext context) {
                     context,
                     MaterialPageRoute(
                       builder: (context) => PasswordDialog(
+                        user:'coordinator',
                         email: 'coordinator?@gmail.com',
                         onSubmit: (String email,String password) {
                           // Handle password submission
@@ -182,6 +170,7 @@ Widget build(BuildContext context) {
                     context,
                     MaterialPageRoute(
                       builder: (context) => PasswordDialog(
+                        user:'support',
                         email: 'support?@gmail.com',
                         onSubmit: (String email,String password) {
                           // Handle password submission

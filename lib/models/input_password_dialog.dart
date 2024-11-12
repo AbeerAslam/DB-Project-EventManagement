@@ -1,14 +1,18 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:vibration/vibration.dart';
 import 'dart:convert';
 
+import '../userPages/Admin/admin_main.dart';
+
 class PasswordDialog extends StatelessWidget {
+  final String user;
   final String email; // Existing email property
   final Function(String, String) onSubmit; // Callback now accepts email and password
-
   const PasswordDialog({
     required this.email,
+    required this.user,
     required this.onSubmit,
     super.key,
   });
@@ -71,19 +75,19 @@ class PasswordDialog extends StatelessWidget {
               if (response.statusCode == 200) {
                 // Password is correct
                 onSubmit(inputEmail, inputPassword); // Call the onSubmit callback with both email and password
-                if (kDebugMode) {
-                  print('Login is successful.');
-                }
                 // Add navigation here
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const NextScreen()), // Replace NextScreen with your actual screen
-                );
+                if(user=='admin'){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  const Admin()), // Replace NextScreen with your actual screen
+                  );
+                }
               } else if (response.statusCode == 401) {
                 // Invalid password
-                if (kDebugMode) {
-                  print('Invalid password.');
+                if (await Vibration.hasVibrator() == true) { // Ensure hasVibrator is true
+                  Vibration.vibrate(duration: 1000);
                 }
+
               } else {
                 // Other errors
                 if (kDebugMode) {
