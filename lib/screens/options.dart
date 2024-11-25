@@ -1,8 +1,15 @@
+import 'dart:convert';
+import 'package:event_management/userPages/Attendee/attendee_main.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:event_management/screens/event_category.dart';
+import 'package:event_management/userPages/Attendee/attendee_events.dart';
 import 'package:event_management/models/input_password_dialog.dart';
 
 import '../models/app_bar.dart';
+import '../models/button.dart';
+import '../userPages/Attendee/attendee_events.dart';
 
 class Options extends StatefulWidget {
   const Options({super.key});
@@ -20,7 +27,7 @@ class _Options extends State<Options> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        appBar: CustomAppBar(titleText:'Logs',false,true).buildAppBar(),
+        appBar: CustomAppBar(titleText:'Choose',false,true).buildAppBar(),
         body: SafeArea(
           top: true,
           child: Stack(
@@ -64,12 +71,13 @@ class _Options extends State<Options> {
                 child: CustomButton(
                   buttonText: 'Attendee',
                   onPressed: () {
-                    Navigator.push(
+                    _showEmailDialog(context);
+                   /* Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EventCategory(),
-                      ),
-                    );
+                        builder: (context) => const EventCategory(),*/
+                      //),
+                    //);
                   },
                 ),
               ),
@@ -190,42 +198,79 @@ Widget build(BuildContext context) {
 }
 }
 
+void _showEmailDialog(BuildContext context) {
+  String attendeeEmail = ''; // Variable to store email
 
-// Custom Button Defined Inside the Options Class
-class CustomButton extends StatelessWidget {
-  final String buttonText;
-  final VoidCallback onPressed;
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: const Text('Enter Email'),
+        content: TextField(
+          decoration: const InputDecoration(hintText: 'Email'),
+          onChanged: (value) {
+            attendeeEmail = value;
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // Close the dialog
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              // Close the dialog first
+              Navigator.of(dialogContext).pop();
 
-  const CustomButton({
-    super.key,
-    required this.buttonText,
-    required this.onPressed,
-  });
+              // Navigate to EventCategory screen immediately
+              Navigator.push(
+                context, // Use the parent context for navigation
+                MaterialPageRoute(
+                  builder: (context) => Attendee(email: attendeeEmail),
+                ),
+              );
 
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(300, 65),
-        padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-        backgroundColor: const Color.fromARGB(255, 33, 9, 78), // Button background color
-        foregroundColor: const Color.fromARGB(255, 255, 255, 255), // Text color (white)
-        textStyle: const TextStyle(
-          fontFamily: 'Montserrat',
-          fontSize: 20,
-          letterSpacing: 0.4,
-        ),
-        elevation: 0,
-        side: const BorderSide(
-          color: Color.fromARGB(255, 189, 197, 36), // Border color
-          width: 0.5,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8), // Border radius
-        ),
-      ),
-      child: Text(buttonText),
+              // Optionally, you can still call the backend for logging purposes or other needs
+              await handleAttendeeEmail(attendeeEmail);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+Future<bool> handleAttendeeEmail(String email) async {
+  const String apiUrl = 'http://10.0.2.2:3000/api/attendee/activity'; // Replace with your backend URL
+
+  try {
+    final response = await http.post(Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'email': email}),
     );
+
+    if (response.statusCode == 200) {
+      // Successfully checked or added attendee
+      if (kDebugMode) {
+        print('Backend Response: ${response.body}');
+      }
+      return true;
+    } else {
+      // Handle failure cases
+      if (kDebugMode) {
+        print(' ${response.body}');
+      }
+      return false;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Error connecting to backend: $e');
+    }
+    return false;
   }
 }
+
