@@ -24,7 +24,7 @@ void main() {
           255, 19, 17, 17)),
       home: const Scaffold(
         body: Center(child: SplashScreen()),
-      ),
+      ),G
     ),
   );
 }
