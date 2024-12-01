@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import '../../models/app_bar.dart';
+import 'package:frontend_project/models/app_bar.dart';
 
 class LogScreen extends StatefulWidget {
   const LogScreen({super.key});

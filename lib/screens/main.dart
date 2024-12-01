@@ -15,8 +15,6 @@ import '../userPages/Admin/admin_log.dart';
 import '../userPages/Attendee/attendee_main.dart';
 
 
-
-
 void main() {
   runApp(
     MaterialApp(

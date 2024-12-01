@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../models/app_bar.dart';
+import 'register_event.dart';
 import '../../models/query_card.dart';
 import '../Support/support_events.dart'; // Assuming you have a custom app bar
 
@@ -298,7 +299,7 @@ class a_EventDetailScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Placeholder(), // Replace with actual navigation
+                                  builder: (context) => const AttendeeRegistrationScreen(), // Replace with actual navigation
                                 ),
                               );
                             },

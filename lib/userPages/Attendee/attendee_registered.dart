@@ -4,8 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class RegisteredEvents extends StatefulWidget {
-  final String email; // Email parameter
+class RegisteredEvents extends StatefulWidget
+{
+  final String email;
   const RegisteredEvents({super.key, required this.email});
 
   @override

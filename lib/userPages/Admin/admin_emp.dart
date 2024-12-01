@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../../models/app_bar.dart';
+import 'package:frontend_project/models/app_bar.dart';
 
 class EmployeeScreen extends StatefulWidget {
   const EmployeeScreen({super.key});

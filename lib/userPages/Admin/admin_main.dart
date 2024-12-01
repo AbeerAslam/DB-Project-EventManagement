@@ -1,46 +1,48 @@
-import 'package:event_management/userPages/Admin/admin_emp.dart';
+import 'package:frontend_project/UserPages/Admin/admin_event_requests.dart';
+import 'package:frontend_project/userPages/Admin/admin_emp.dart';
 import 'package:flutter/material.dart';
-import 'package:event_management/models/navigation_bar.dart';
+import 'package:frontend_project/models/navigation_bar.dart';
+import 'package:frontend_project/models/logs.dart';
+import 'admin_log.dart';
 
-import '../../models/logs.dart';
-import 'admin_log.dart'; // Import the responsive nav bar
-
-class Admin extends  StatefulWidget {
+class Admin extends  StatefulWidget
+{
   const Admin({super.key});
 
   @override
   State<Admin> createState() => _AdminState();
 }
-class _AdminState extends State<Admin> with WidgetsBindingObserver {
-  final String userEmail = "admin@gmail.com"; // Example email, this should be dynamic
-  final String userRole = "Admin"; // Example role
+class _AdminState extends State<Admin> with WidgetsBindingObserver
+{
+  final String userEmail = "admin@gmail.com";
+  final String userRole = "Admin";
 
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // Log that the user has entered the dashboard page
     _logActivity(' logged in');
   }
 
   @override
-  void dispose() {
-    // Log that the user is leaving the dashboard page
+  void dispose()
+  {
     _logActivity(' logged out');
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  // Function to log activity
-  Future<void> _logActivity(String activity) async {
+  Future<void> _logActivity(String activity) async
+  {
     Logs logs = Logs();
     await logs.logActivity(userEmail, userRole, activity);
   }
 
   @override
-  Widget build(BuildContext context) {
-
+  Widget build(BuildContext context)
+  {
     return  CustomNavigationBar(
       destinations: const <NavigationDestination>[
         NavigationDestination(
@@ -60,35 +62,12 @@ class _AdminState extends State<Admin> with WidgetsBindingObserver {
         ),
       ],
       pages: const <Widget>[
-
-
-
-
-       EmployeeScreen(),
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
-        LogScreen(),
-      ],
-
+          EmployeeScreen(),
+          AdminEventRequests(),
+          LogScreen(),
+        ],
+        selectedItemColor: Colors.blueAccent,
+        unselectedItemColor: Colors.grey,
     );
   }
 }

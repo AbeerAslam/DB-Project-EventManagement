@@ -1,29 +1,24 @@
 import 'package:event_management/models/gloss_button.dart';
 import 'package:event_management/userPages/Attendee/attendee_events.dart';
 import 'package:flutter/material.dart';
-
 import '../../models/navigation_bar.dart';
-import '../../screens/options.dart';
-import 'attendee_events.dart';
 
-class Attendee extends  StatefulWidget {
-  final String email; // Nullable email parameter
+class Attendee extends  StatefulWidget
+{
+  final String email;
   const Attendee({super.key, required this.email});
 
   @override
   State<Attendee> createState() => _AttendeeState();
 }
 
-
 class _AttendeeState extends State<Attendee> with WidgetsBindingObserver {
-
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
-
 
 @override
 Widget build(BuildContext context) {
@@ -42,10 +37,7 @@ Widget build(BuildContext context) {
       ),
     ],
     pages: <Widget>[
-
-
-
-      GlossyButtonsPage("    View\nFeedback","   View \n Queries",'attendee',widget.email),
+      GlossyButtonsPage("View\nFeedback","View \n Queries",'attendee',widget.email),
       EventCategory(email: widget.email)
     ],
 
