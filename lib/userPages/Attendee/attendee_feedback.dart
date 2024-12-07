@@ -29,7 +29,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Are You Sure to Delete"),
+        backgroundColor: Colors.blueGrey,
+        title: const Text("Confirm Deletion"),
         actions: <Widget>[
           ElevatedButton(
             onPressed: () {
@@ -37,14 +38,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
               Navigator.of(ctx).pop(); // Close the dialog
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text("Delete"),
+            child: const Text("Delete",style:TextStyle(color: Colors.white)),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(ctx).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text("Close"),
+            child: const Text("Close",style:TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -61,17 +62,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text("$operation"),
+        backgroundColor: const Color.fromARGB(255, 19, 18, 18),
+        title: Text(operation,style: const TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: feedbackController,
-              decoration: const InputDecoration(labelText: 'Feedback'),
+                style: const TextStyle(color: Colors.grey),
+              decoration: const InputDecoration(labelText: 'Feedback',
+                labelStyle:  TextStyle(color: Colors.white),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.orange, width: 2.0),),)
             ),
             // Show Event ID and Attendee ID as non-editable fields
-            Text("Event ID: $eventId", style: const TextStyle(fontSize: 16)),
-            Text("Attendee ID: $attendeeId", style: const TextStyle(fontSize: 16)),
+            Text("Event ID: $eventId", style: const TextStyle(fontSize: 16,color: Colors.blue)),
+            Text("Attendee ID: $attendeeId", style: const TextStyle(fontSize: 16,color: Colors.pink)),
           ],
         ),
         actions: <Widget>[
@@ -88,14 +94,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
               Navigator.of(ctx).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-            child: Text(operation),
+            child: Text(operation,style: const TextStyle(color: Colors.white)),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(ctx).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text("Cancel"),
+            child: const Text("Cancel",style:  TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -182,20 +188,21 @@ class _FeedbackPageState extends State<FeedbackPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(titleText: "Feedback", true, false).buildAppBar(),
+      appBar: CustomAppBar(titleText: "Feedback", true, true).buildAppBar(),
       body: ListView.builder(
         itemCount: feedbackEntries.length,
         itemBuilder: (ctx, index) {
           return Card(
+            color: const Color.fromARGB(255, 16, 42, 67),
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             child: ListTile(
-              leading: const Icon(Icons.feedback),
-              title: Text(feedbackEntries[index]['feedback']),
+              leading: const Icon(Icons.feedback,color: Colors.orange,),
+              title: Text(feedbackEntries[index]['feedback'],style:const TextStyle(color: Colors.white,fontStyle: FontStyle.italic)),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Event ID: ${feedbackEntries[index]['event_id']}'),
-                  Text('Attendee ID: ${feedbackEntries[index]['attendee_id']}'),
+                  Text('Event ID: ${feedbackEntries[index]['event_id']}',style:const TextStyle(color: Colors.blue)),
+                  Text('Attendee ID: ${feedbackEntries[index]['attendee_id']}',style:const TextStyle(color: Colors.lightGreenAccent)),
                 ],
               ),
               trailing: Row(
@@ -206,7 +213,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     onPressed: () {
                       final entry = feedbackEntries[index];
                       showFeedbackDialog(
-                        'edit',
+                        'Edit',
                         entry['feedback_id'],
                         entry['feedback'],
                         entry['event_id'],

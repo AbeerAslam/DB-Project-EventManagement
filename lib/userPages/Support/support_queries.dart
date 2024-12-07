@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../models/app_bar.dart';
 import '../../models/query_card.dart';
 
 class QueryList extends StatefulWidget {
@@ -75,9 +76,7 @@ class _QueryListState extends State<QueryList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Details'),
-      ),
+      appBar: CustomAppBar(titleText: "Queries", true, true).buildAppBar(),
       body: FutureBuilder<List<dynamic>>(
         future: queries,
         builder: (context, snapshot) {

@@ -1,11 +1,12 @@
+import 'dart:convert';
+
 import 'package:event_management/models/gloss_button.dart';
-import 'package:event_management/models/query_card.dart';
-import 'package:event_management/userPages/Attendee/attendee_events.dart';
 import 'package:event_management/userPages/Support/support_events.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+
+import '../../models/logs.dart';
 import '../../models/navigation_bar.dart';
 
 class Support extends StatefulWidget {
@@ -19,11 +20,28 @@ class Support extends StatefulWidget {
 class _SupportState extends State<Support> with WidgetsBindingObserver {
   late Future<List<dynamic>> _events;
 
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // Log that the user has entered the dashboard page
+    _logActivity(' logged in');
     _events = fetchEvents();
+
+  }
+
+  Future<void> _logActivity(String activity) async {
+    Logs logs = Logs();
+    await logs.logActivity(widget.email, "Support Specialist", activity);
+  }
+
+  @override
+  void dispose() {
+    // Log that the user is leaving the dashboard page
+    _logActivity(' logged out');
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<List<dynamic>> fetchEvents() async {
@@ -59,11 +77,11 @@ class _SupportState extends State<Support> with WidgetsBindingObserver {
         NavigationDestination(
           selectedIcon: Icon(Icons.question_answer_sharp, color: Colors.white),
           icon: Icon(Icons.question_answer_outlined, color: Colors.white),
-          label: 'Queries',
+          label: 'Events',
         ),
       ],
       pages: <Widget>[
-        GlossyButtonsPage("Manage\n Emails", "   View\nAnswers",'support',widget.email),
+        GlossyButtonsPage(" Manage\nMarketing", "   View\nAnswers",'support',widget.email),
         FutureBuilder<List<dynamic>>(
           future: _events,
           builder: (context, snapshot) {

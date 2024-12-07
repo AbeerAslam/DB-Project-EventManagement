@@ -1,9 +1,7 @@
 import 'package:event_management/userPages/Support/support_queries.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 import '../../models/app_bar.dart';
 import '../../models/query_card.dart';
 
@@ -15,9 +13,7 @@ class EventList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Details'),
-      ),
+      appBar: CustomAppBar(titleText: "Event Details", true, true).buildAppBar(),
       body: ListView.builder(
         itemCount: events.length,
         itemBuilder: (context, index) {
@@ -93,6 +89,26 @@ class EventList extends StatelessWidget {
                               );
                             },
                           ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.pink,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            onPressed: () {
+                              // Navigation or action for the button
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QueryCard(events[index], "reminder", email: email), // Replace with actual navigation
+                                ),
+                              );
+                            },
+                            child: const Icon(Icons.notifications, color: Colors.yellowAccent),
+                          ),
+
                           // Query Button
                           ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(

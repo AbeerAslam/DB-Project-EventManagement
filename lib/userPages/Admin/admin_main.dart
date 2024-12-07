@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:event_management/models/navigation_bar.dart';
 
 import '../../models/logs.dart';
+import 'admin_event_requests.dart';
 import 'admin_log.dart'; // Import the responsive nav bar
 
 class Admin extends  StatefulWidget {
@@ -65,27 +66,7 @@ class _AdminState extends State<Admin> with WidgetsBindingObserver {
 
 
        EmployeeScreen(),
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
+        AdminEventRequests(),
         LogScreen(),
       ],
 

@@ -1,9 +1,10 @@
 import 'package:event_management/screens/queries_display.dart';
-import 'package:event_management/userPages/Attendee/attendee_events.dart';
 import 'package:event_management/userPages/Attendee/attendee_feedback.dart';
 import 'package:event_management/userPages/Attendee/attendee_registered.dart';
 import 'package:event_management/userPages/Support/support_marketing.dart';
 import 'package:flutter/material.dart';
+
+import 'app_bar.dart';
 
 class GlossyButtonsPage extends StatelessWidget {
   final String b1;
@@ -16,10 +17,7 @@ class GlossyButtonsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black12,
-      appBar: AppBar(
-        title: const Text('Glossy Buttons'),
-        backgroundColor: Colors.deepOrange,
-      ),
+      appBar: CustomAppBar(titleText: "DashBoard", true, true).buildAppBar(),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -42,7 +40,7 @@ class GlossyButtonsPage extends StatelessWidget {
               const SizedBox(height: 20),
               _buildGlossyButton(
                 label: b1,
-                color: Colors.orangeAccent,
+                color: Colors.deepOrange,
                 onPressed: () {
                   if (user == 'attendee') {
                     Navigator.push(
@@ -64,7 +62,7 @@ class GlossyButtonsPage extends StatelessWidget {
               const SizedBox(height: 20),
               _buildGlossyButton(
                 label: b2,
-                color: Colors.greenAccent,
+                color: Colors.pink,
                 onPressed: () {
                   Navigator.push(
                     context,

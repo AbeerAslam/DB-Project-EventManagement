@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../models/app_bar.dart';
+
 class QueryAll extends StatefulWidget {
   final String userType;
   final String email;
@@ -79,9 +81,7 @@ class _QueryAllState extends State<QueryAll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Details'),
-      ),
+      appBar: CustomAppBar(titleText: "Queries", true, true).buildAppBar(),
       body: FutureBuilder<List<dynamic>>(
         future: queries,
         builder: (context, snapshot) {

@@ -48,7 +48,7 @@ class _QueryCardState extends State<QueryCard> {
       snackSuccess = "Answer Submitted!";
       snackFail = "Cannot answer empty strings";
     }else if (widget.userType == 'promoter') {
-      title = "Promote this Event!";
+      title = "Promote ${widget.event['event_name']}!";
       subTitle = "Add your content below";
       fieldTitle = "......";
       buttonTitle = "Submit";
@@ -60,6 +60,13 @@ class _QueryCardState extends State<QueryCard> {
       fieldTitle = "......";
       buttonTitle = "Submit";
       snackSuccess = "Feedback Submitted";
+      snackFail = "Cannot leave field empty";
+    }else if (widget.userType == 'reminder') {
+      title = "Set Reminder for ${widget.event['event_name']}!";
+      subTitle = "Add your content below";
+      fieldTitle = "......";
+      buttonTitle = "Send";
+      snackSuccess = "Reminders Emailed";
       snackFail = "Cannot leave field empty";
     }
   }
@@ -78,16 +85,16 @@ class _QueryCardState extends State<QueryCard> {
           gradient: LinearGradient(
             colors: widget.userType == 'attendee'
                 ? [const Color(0xFFFFA726), const Color(0xFFFF7043)] // Orange gradient
-                : widget.userType == 'support'
-                ? [const Color(0xFF4CAF50), const Color(0xFF1E88E5)] // Blue gradient
-                : [const Color(0xFF2196F3), const Color(0xFF388E3C)], // Green gradient
+                : widget.userType == 'support' || widget.userType == 'reminder'
+                ? [ const Color(0xFF1E88E5), const Color(0xC75A228B)] // Blue gradient
+                : [const Color(0xC75A228B), const Color(0xFF2196F3)], // Green gradient
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: widget.userType == 'promoter'
+              color: widget.userType == 'promoter' || widget.userType=='reminder'
                 ? Colors.blueGrey.withOpacity(0.3) // Orange gradient
              : Colors.orange.withOpacity(0.6),
               blurRadius: 15,
@@ -141,7 +148,10 @@ class _QueryCardState extends State<QueryCard> {
                     vertical: 12,
                   ),
                 ),
-              ),
+                style: const TextStyle(
+                  color: Colors.black, // Set your desired color here
+                  fontSize: 16)
+                ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -149,8 +159,8 @@ class _QueryCardState extends State<QueryCard> {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.userType == 'promoter'
-                        ? Colors.green
+                    backgroundColor: widget.userType == 'promoter' || widget.userType == 'reminder'
+                        ? Colors.purple
                         : Colors.deepOrange,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -183,6 +193,10 @@ class _QueryCardState extends State<QueryCard> {
                       else if (widget.userType=='feedback'){
                         giveFeedback(widget.event['event_id'], widget.email, _response ) ;
                       }
+                      else if (widget.userType=='reminder'){
+                        setReminder(widget.event['event_id'],widget.event['event_name'], widget.email, _response ) ;
+                      }
+
 
                       Navigator.pop(context, _response); // Close the dialog
                     } else {
@@ -323,6 +337,33 @@ Future<void> giveFeedback( int eventId, String attendeeEmail, String feedback) a
       }
     } else {
       throw Exception('Failed to add feedback entry');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print('Add Error: $e');
+    }
+  }
+}
+
+Future<void> setReminder( int eventId, String eventName,String supportEmail, String reminder) async {
+  try {
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:3000/api/reminder'),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        'reminder': reminder,
+        'event_id': eventId, // Ensure this is an integer
+        'event_name': eventName, // Ensure this is an integer
+        'support_email': supportEmail,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      if(kDebugMode){
+        print("Reminder Sent!");
+      }
+    } else {
+      throw Exception('Failed to send reminders');
     }
   } catch (e) {
     if (kDebugMode) {

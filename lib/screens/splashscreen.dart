@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:event_management/screens/options.dart';
-
 import 'dart:async';
+import 'package:shimmer/shimmer.dart';
+import 'options.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,10 +11,13 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () {
+
+    // Delay for 2 seconds, then navigate to Options screen
+    Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Options()),
@@ -23,21 +26,32 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  Widget build(context) {
-    return Center(
-      child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-             Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-              'assets/images/LOGO.png',
-              width: 200,
-            )
-            )
-      ],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            // This image will be centered on the screen
+            Opacity(
+              opacity: 0.5,
+              child: Image.asset('assets/images/LOGO.png'),
+            ),
+
+            // Shimmer effect applied to the centered image
+            Shimmer.fromColors(
+              period: const Duration(milliseconds: 1500),
+              baseColor: const  Color.fromARGB(255, 207, 120, 33),
+              highlightColor: const Color(0xffbfbdba),
+              child: Opacity(
+                opacity: 0.5,
+                child: Image.asset('assets/images/LOGO.png'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-

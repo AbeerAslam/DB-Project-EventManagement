@@ -28,8 +28,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_dotenv: ^5.0.2
   flutter:
     sdk: flutter
+  shimmer: ^2.0.0
   vibration: ^1.8.4
   auto_size_text: 3.0.0
   cached_network_image: 3.3.1
@@ -98,6 +100,7 @@ flutter:
      - assets/images/Competitions.png
      - assets/images/Seminars.png
      - assets/images/CareerFairs.png
+     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

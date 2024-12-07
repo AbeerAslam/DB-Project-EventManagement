@@ -14,6 +14,9 @@ class EmployeeScreen extends StatefulWidget {
 
 class _EmployeeScreenState extends State<EmployeeScreen> {
   List<Map<String, dynamic>> employees = [];
+  List<Map<String, dynamic>> filteredEmployees = []; // For filtered results
+  final TextEditingController searchController = TextEditingController(); // Controller for search
+
 
   @override
   void initState() {
@@ -29,7 +32,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Are You Sure to Delete"),
+        backgroundColor: Colors.blueGrey,
+        title: const Text("Confirm Deletion"),
         actions: <Widget>[
           ElevatedButton(
             onPressed: () {
@@ -37,14 +41,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               Navigator.of(ctx).pop(); // Close the dialog
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text("Delete"),
+            child: const Text("Delete",style:TextStyle(color: Colors.white)),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(ctx).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text("Close"),
+            child: const Text("Close",style:TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -54,7 +58,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   // Show edit employee dialog
   void showEmpDialog(String operation, int id, String fullName, String phone, String email, String hireDate, String role) {
     // Convert phone and hireDate to strings if they are not already
-    final fullNameController = TextEditingController(text: fullName);
+    final fullNameController = TextEditingController(text: fullName,);
     final phoneController = TextEditingController(text: phone.toString()); // Ensure phone is a string
     final emailController = TextEditingController(text: email);
     final hireDateController = TextEditingController(text: hireDate.toString()); // Ensure hireDate is a string
@@ -63,30 +67,48 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text("$operation Employee"),
+        backgroundColor: const Color.fromARGB(255, 19, 18, 18),
+        title: Text("$operation Employee",style:(const TextStyle(color: Colors.white))),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: fullNameController,
-              decoration: const InputDecoration(labelText: 'Full Name'),
+            style: const TextStyle(color: Colors.grey),
+              cursorColor: Colors.orangeAccent,
+              decoration: const InputDecoration(labelText: 'Full Name',
+                  labelStyle:  TextStyle(color: Colors.white),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.orange, width: 2.0),),)
             ),
             TextField(
               controller: phoneController,
-              decoration: const InputDecoration(labelText: 'Phone'),
+              cursorColor: Colors.orangeAccent,
+              decoration: const InputDecoration(labelText: 'Phone',labelStyle:  TextStyle(color: Colors.white),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange, width: 2.0),)),
               keyboardType: TextInputType.phone,
             ),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              cursorColor: Colors.orangeAccent,
+              decoration: const InputDecoration(labelText: 'Email',labelStyle:  TextStyle(color: Colors.white),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.orange, width: 2.0),),)
             ),
             TextField(
               controller: hireDateController,
-              decoration: const InputDecoration(labelText: 'Hire Date'),
+              cursorColor: Colors.orangeAccent,
+              decoration: const InputDecoration(labelText: 'Hire Date',labelStyle:  TextStyle(color: Colors.white),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.orange, width: 2.0),),)
             ),
             TextField(
+              cursorColor: Colors.orangeAccent,
               controller: roleController,
-              decoration: const InputDecoration(labelText: 'Role'),
+              decoration: const InputDecoration(labelText: 'Role',labelStyle:  TextStyle(color: Colors.white),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange, width: 2.0),),)
             ),
           ],
         ),
@@ -101,7 +123,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   hireDateController.text,
                   roleController.text,
                 );
-              } else if (operation == 'edit') {
+              } else if (operation == 'Edit') {
                 _updateEmployee(
                   id, // Use id directly
                   fullNameController.text,
@@ -113,15 +135,15 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               }
               Navigator.of(ctx).pop();
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-            child: Text(operation),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: Text(operation,style:const TextStyle(color: Colors.white)),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(ctx).pop();
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text("Cancel"),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text("Cancel",style:TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -132,7 +154,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   Future<void> _addEmployee(String fullName, String phone, String email, String hireDate, String role) async {
     try {
       final response = await http.post(
-        Uri.parse(apiUrl),
+        Uri.parse('http://10.0.2.2:3000/api/emp'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           "Full_Name": fullName,
@@ -177,6 +199,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             "Hire_Date": item['Hire_Date'],
             "Role": item['Role']
           }).toList();
+
+          filteredEmployees = employees; // Initialize filtered list
         });
       } else {
         throw Exception('Failed to load employees');
@@ -187,6 +211,19 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       }
     }
   }
+
+  void _filterEmployees(String query) {
+    setState(() {
+      filteredEmployees = employees.where((employee) {
+        final fullName = employee['Full_Name'].toLowerCase();
+        final role = employee['Role'].toLowerCase();
+        final searchLower = query.toLowerCase();
+
+        return fullName.contains(searchLower) || role.contains(searchLower);
+      }).toList();
+    });
+  }
+
 
   Future<void> _updateEmployee(int id, String fullName, String phone, String email, String hireDate, String role) async {
     try {
@@ -237,61 +274,97 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(titleText: "Employees",true,false).buildAppBar(),
-      body: ListView.builder(
-        itemCount: employees.length,
-        itemBuilder: (ctx, index) {
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            child: ListTile(
-              leading: const Icon(Icons.person),
-              title: Text(employees[index]['Full_Name']),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Phone: ${employees[index]['Phone']}'),
-                  Text('Email: ${employees[index]['Email']}'),
-                  Text('Hire Date: ${DateTime.parse(employees[index]['Hire_Date']).toLocal().toString().split(' ')[0]}'),
-                  Text('Role: ${employees[index]['Role']}'),
-                ],
-              ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.green),
-                      onPressed: () {
-                        // Extract values from the employee map to pass to the dialog
-                        final employee = employees[index];
-                        showEmpDialog(
-                          'edit',
-                          employee['Emp_ID'], // Pass the employee ID
-                          employee['Full_Name'],
-                          employee['Phone'].toString(),
-                          employee['Email'].toString(),
-                          employee['Hire_Date'],
-                          employee['Role'],
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _showDeleteDialog(employees[index]['Emp_ID']),
-                    ),
-                  ],
+      appBar: CustomAppBar(titleText: "Employees", true, true).buildAppBar(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchController,
+              onChanged: _filterEmployees, // Update list as the user types
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                hintText: 'Search by name or role',
+                hintStyle: const TextStyle(color: Colors.grey),
+                filled: true,
+                fillColor: const Color.fromARGB(210, 25, 39, 92),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
                 ),
-
+              ),
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredEmployees.length,
+              itemBuilder: (ctx, index) {
+                return Card(
+                  color: const Color.fromARGB(255, 16, 42, 67),
+                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: ListTile(
+                    leading: const Icon(Icons.person, color: Colors.white),
+                    title: Text(filteredEmployees[index]['Full_Name'], style: const TextStyle(color: Colors.white)),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Phone: ${filteredEmployees[index]['Phone']}',
+                          style: const TextStyle(color: Colors.blue),
+                        ),
+                        Text(
+                          'Email: ${filteredEmployees[index]['Email']}',
+                          style: const TextStyle(color: Colors.green),
+                        ),
+                        Text(
+                          'Hire Date: ${DateTime.parse(filteredEmployees[index]['Hire_Date']).toLocal().toString().split(' ')[0]}',
+                          style: const TextStyle(color: Colors.pinkAccent),
+                        ),
+                        Text(
+                          '${filteredEmployees[index]['Role']}',
+                          style: const TextStyle(color: Colors.white, fontStyle: FontStyle.italic),
+                        ),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.green),
+                          onPressed: () {
+                            final employee = filteredEmployees[index];
+                            showEmpDialog(
+                              'Edit',
+                              employee['Emp_ID'],
+                              employee['Full_Name'],
+                              employee['Phone'].toString(),
+                              employee['Email'].toString(),
+                              employee['Hire_Date'],
+                              employee['Role'],
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _showDeleteDialog(filteredEmployees[index]['Emp_ID']),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Call the dialog for adding a new employee
-          showEmpDialog('add', 0, '', '', '', '', '');
+          showEmpDialog('Add', 0, '', '', '', '', '');
         },
         child: const Icon(Icons.add),
       ),

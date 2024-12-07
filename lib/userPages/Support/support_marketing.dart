@@ -29,7 +29,7 @@ class _MarketingState extends State<Marketing> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Are You Sure to Delete"),
+        title: const Text("Confirm Deletion"),
         actions: <Widget>[
           ElevatedButton(
             onPressed: () {
@@ -61,17 +61,21 @@ class _MarketingState extends State<Marketing> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text("$operation Marketing Entry"),
+          backgroundColor: const Color.fromARGB(255, 19, 18, 18),
+        title: Text("$operation Marketing Entry", style: const TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: marketingController,
-              decoration: const InputDecoration(labelText: 'Marketing'),
+              style: const TextStyle(color: Colors.grey),
+              decoration: const InputDecoration(labelText: 'Marketing',labelStyle: TextStyle(color: Colors.white),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange, width: 2.0),)),
             ),
             // Show Event ID and Support ID as non-editable fields
-            Text("Event ID: $eventId", style: const TextStyle(fontSize: 16)),
-            Text("Support ID: $supportId", style: const TextStyle(fontSize: 16)),
+            Text("Event ID: $eventId", style: const TextStyle(fontSize: 16,color: Colors.blue)),
+            Text("Support ID: $supportId", style: const TextStyle(fontSize: 16,color: Colors.pink)),
           ],
         ),
         actions: <Widget>[
@@ -88,14 +92,14 @@ class _MarketingState extends State<Marketing> {
               Navigator.of(ctx).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-            child: Text(operation),
+            child: Text(operation,style: const TextStyle(color: Colors.white)),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(ctx).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text("Cancel"),
+            child: const Text("Cancel",style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -182,20 +186,21 @@ class _MarketingState extends State<Marketing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(titleText: "Marketing", true, false).buildAppBar(),
+      appBar: CustomAppBar(titleText: "Marketing", true, true).buildAppBar(),
       body: ListView.builder(
         itemCount: marketingEntries.length,
         itemBuilder: (ctx, index) {
           return Card(
+            color: const Color.fromARGB(255, 16, 42, 67),
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             child: ListTile(
-              leading: const Icon(Icons.campaign),
-              title: Text(marketingEntries[index]['marketing']),
+              leading: const Icon(Icons.campaign,color: Colors.orange),
+              title: Text(marketingEntries[index]['marketing'],style: const TextStyle(fontStyle: FontStyle.italic,color: Colors.white)),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Event ID: ${marketingEntries[index]['event_id']}'),
-                  Text('Support ID: ${marketingEntries[index]['support_id']}'),
+                  Text('Event ID: ${marketingEntries[index]['event_id']}',style: const TextStyle(color: Colors.blue)),
+                  Text('Support ID: ${marketingEntries[index]['support_id']}',style: const TextStyle(color: Colors.pink)),
                 ],
               ),
               trailing: Row(
@@ -206,7 +211,7 @@ class _MarketingState extends State<Marketing> {
                     onPressed: () {
                       final entry = marketingEntries[index];
                       showMarketingDialog(
-                        'edit',
+                        'Edit',
                         entry['marketing_id'],
                         entry['marketing'],
                         entry['event_id'],

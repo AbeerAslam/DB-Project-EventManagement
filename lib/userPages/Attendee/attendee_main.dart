@@ -3,8 +3,6 @@ import 'package:event_management/userPages/Attendee/attendee_events.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/navigation_bar.dart';
-import '../../screens/options.dart';
-import 'attendee_events.dart';
 
 class Attendee extends  StatefulWidget {
   final String email; // Nullable email parameter

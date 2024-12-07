@@ -1,11 +1,13 @@
+import 'dart:convert';
+
+import 'package:event_management/userPages/Attendee/register_event.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:intl/intl.dart';
+
 import '../../models/app_bar.dart';
 import '../../models/query_card.dart';
-import '../Support/support_events.dart'; // Assuming you have a custom app bar
 
 class EventCategory extends StatefulWidget {
   final String email; // Nullable email parameter
@@ -16,7 +18,7 @@ class EventCategory extends StatefulWidget {
 }
 
 class _EventCategoryState extends State<EventCategory> {
-  final String baseUrl = 'http://10.0.2.2:3000/api/events'; // Adjust the URL if necessary
+  final String baseUrl = 'http://10.0.2.2:3000/api/event'; // Adjust the URL if necessary
 
   Future<List> fetchEventsByCategory(String category, BuildContext context) async {
     try {
@@ -142,9 +144,7 @@ class a_EventDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Details'),
-      ),
+      appBar: CustomAppBar(titleText: "Event Details", true, true).buildAppBar(),
       body: ListView.builder(
         itemCount: events.length,
         itemBuilder: (context, index) {
@@ -298,7 +298,7 @@ class a_EventDetailScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Placeholder(), // Replace with actual navigation
+                                  builder: (context) =>   AttendeeRegistrationScreen(events[index]), // Replace with actual navigation
                                 ),
                               );
                             },

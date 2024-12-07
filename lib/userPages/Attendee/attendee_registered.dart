@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../models/app_bar.dart';
+
 class RegisteredEvents extends StatefulWidget {
   final String email; // Email parameter
   const RegisteredEvents({super.key, required this.email});
@@ -57,9 +59,8 @@ class RegisteredEventsState extends State<RegisteredEvents> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registered Events'),
-      ),
+      appBar: CustomAppBar(titleText: "Your Events", true, true).buildAppBar(),
+
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : errorMessage != null
@@ -78,6 +79,7 @@ class RegisteredEventsState extends State<RegisteredEvents> {
           final isPastEvent = eventDate != null && eventDate.isBefore(DateTime.now());
 
           return Card(
+            color: const Color.fromARGB(255, 16, 42, 67),
             key: ValueKey(event['event_name']), // Unique key for each event
             margin: const EdgeInsets.all(8.0),
             shape: RoundedRectangleBorder(
@@ -110,7 +112,7 @@ class RegisteredEventsState extends State<RegisteredEvents> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.event, color: Colors.purple),
+                        const Icon(Icons.event, color: Colors.deepOrange),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -134,7 +136,7 @@ class RegisteredEventsState extends State<RegisteredEvents> {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
+                            backgroundColor: Colors.pinkAccent,
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),

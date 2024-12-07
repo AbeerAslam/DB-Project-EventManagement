@@ -12,9 +12,9 @@ class CustomNavigationBar extends StatefulWidget {
     super.key,
     required this.destinations,
     required this.pages,
-    this.indicatorColor = const Color.fromARGB(255, 33, 9, 78),
+    this.indicatorColor = const Color.fromARGB(255, 204, 48, 1),
     this.backgroundColor = const Color.fromARGB(255, 19, 17, 17),
-    this.borderColor = const Color.fromARGB(255, 33, 9, 78),
+    this.borderColor = const Color.fromARGB(255, 204, 48, 1),
     this.borderWidth = 2.0,
   }) : assert(destinations.length == pages.length, "Destinations and pages must match in length");
 
